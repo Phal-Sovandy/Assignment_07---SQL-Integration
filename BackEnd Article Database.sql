@@ -1,48 +1,10 @@
--- EX-01-02
+DROP DATABASE week6Db;
 CREATE DATABASE week6Db;
 USE week6Db;
 
-CREATE TABLE articles(
-	id INT PRIMARY KEY AUTO_INCREMENT,
-    title VARCHAR(255),
-    content text,
-    journalist VARCHAR(100),
-    category VARCHAR(50)
-);
-
-SELECT * FROM articles;
-
-SELECT * FROM articles WHERE journalist = 'RONAN';
-
-INSERT INTO articles(title, content, journalist, category)
-VALUES ('All of Us are dead', 'There a group of student run away from school of zombies', 'Phal Sovandy', 'Horrors');
-
-DELETE FROM articles 
-WHERE title LIKE 'R%';
-
-
--- EX-03
-
--- Option 1: Alter table instead of create a new one
--- ALTER TABLE articles
--- ADD COLUMN journalistId INT;
-
--- UPDATE articles a
--- JOIN journalist j ON a.journalist = j.name
--- SET a.journalistId = j.journalistId;
-
--- ALTER TABLE articles
--- DROP COLUMN journalist;
-
--- ALTER TABLE articles
--- ADD CONSTRAINT fk_journalist
--- FOREIGN KEY (journalistId) REFERENCES journalist(journalistId);
-
--- Option 2: Drop table and create a new one
-DROP TABLE articles;
 CREATE TABLE journalist(
     journalistId INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255),
+    jur_name VARCHAR(255) UNIQUE,
     email VARCHAR(255),
     bio TEXT
 );
@@ -55,34 +17,103 @@ CREATE TABLE articles(
     category VARCHAR(50),
     FOREIGN KEY (journalistId) REFERENCES journalist(journalistId)
 );
+select * from articles;
+
+CREATE TABLE category(
+	categoryId INT PRIMARY KEY AUTO_INCREMENT,
+    cat_name VARCHAR(20) UNIQUE
+);
+
+CREATE TABLE category_article(
+	articleId INT,
+    categoryId INT,
+    FOREIGN KEY (articleId) REFERENCES articles(id),
+    FOREIGN KEY (categoryId) REFERENCES category(categoryId)
+);
 
 
--- Insert data into journalist table
-INSERT INTO journalist (name, email, bio) VALUES
-('Alice Johnson', 'alice.johnson@example.com', 'Alice is a senior political journalist with over 10 years of experience.'),
-('Bob Smith', 'bob.smith@example.com', 'Bob covers technology and startups across Southeast Asia.'),
-('Clara Nguyen', 'clara.nguyen@example.com', 'Clara is a freelance journalist focusing on environmental issues.');
+-- Insert journalists
+INSERT INTO journalist (jur_name, email, bio) VALUES
+('Sophia Tan', 'sophia.tan@example.com', 'Award-winning journalist with 10 years of experience covering Southeast Asian politics and culture.'),
+('Liam Chen', 'liam.chen@example.com', 'Tech writer and analyst, focused on startups, innovation, and AI advancements.'),
+('Isabella Sok', 'isabella.sok@example.com', 'Freelance health and science journalist with a passion for public education.'),
+('David Heng', 'david.heng@example.com', 'Senior investigative reporter covering government and policy.'),
+('Nita Vong', 'nita.vong@example.com', 'Lifestyle columnist writing about travel, wellness, and modern living.');
 
--- Insert data into articles table
-INSERT INTO articles (title, content, journalistId, category) VALUES
-('Government Announces New Tax Reforms', 'The government has introduced new tax reforms aimed at boosting the economy...', 1, 'Politics'),
-('Startups Thrive in 2025 Tech Boom', 'Startups in Asia are thriving with record investments in the first quarter...', 2, 'Technology'),
-('Climate Change Effects in Coastal Regions', 'Coastal communities are experiencing more frequent flooding and storms...', 3, 'Environment'),
-('Election Results: What’s Next?', 'The recent election results have reshaped the political landscape...', 1, 'Politics'),
-('AI Tools Changing Journalism', 'Artificial Intelligence is revolutionizing how journalists research and report...', 2, 'Technology')
-('Inside the Minds of Innovators: A Deep Dive',
- 'In today’s rapidly evolving digital landscape, innovation is no longer optional — it’s a necessity. 
-  We spoke to over 30 leading minds across industries to uncover what fuels their creative processes.
-  From early brainstorming to product launch, this article explores every step of the journey.
-  
-  The story begins in the heart of Silicon Valley, where startup culture has embraced a fail-fast mindset.
-  According to Dr. Aileen Grant, "Innovation thrives in environments where calculated risks are rewarded."
-  
-  Case studies include companies like Neuromind, which pivoted three times before landing their breakthrough brain-to-text software.
-  Another highlight is a deep look at how decentralization and blockchain tech are fostering innovation in traditionally rigid industries like banking.
-  
-  Beyond the boardroom, we examine how educational institutions are preparing the next generation of thinkers and tinkerers.
-  The article wraps up with a call to action for organizations to build internal cultures that reward experimentation and curiosity.
-  
-  This is not just a tech revolution — it’s a human one.',
- 2, 'Innovation');
+-- Insert categories
+INSERT INTO category (cat_name) VALUES 
+('Technology'),
+('Health'),
+('Education'),
+('Entertainment'),
+('Business'),
+('Science'),
+('Travel'),
+('Lifestyle'),
+('Sports'),
+('Politics'),
+('Environment'),
+('Culture');
+
+-- Insert articles
+INSERT INTO articles (title, content, journalistId) VALUES
+('The Rise of Clean Energy in Cambodia',
+ 'Cambodia is rapidly adopting solar and wind energy, supported by government incentives and foreign investment. Projects in provinces like Kampong Speu and Battambang have seen significant growth...',
+ 3),
+('Breakthrough in Local AI Research',
+ 'Researchers from Phnom Penh Institute of Technology have unveiled a new AI model optimized for Khmer language understanding...',
+ 2),
+('Healthcare Challenges in Rural Provinces',
+ 'Access to quality healthcare remains a challenge in Cambodia\'s rural areas. Many communities are underserved...',
+ 3),
+('General Elections: What to Expect in 2025',
+ 'As the general elections approach, political campaigns are intensifying. Key parties are focusing on economic recovery...',
+ 4),
+('Digital Nomads Flocking to Siem Reap',
+ 'With improved internet infrastructure and affordable living, Siem Reap is becoming a hotspot for digital nomads...',
+ 5),
+('How Startups Are Changing the Education Sector',
+ 'EdTech startups in Cambodia are making learning more accessible...',
+ 2),
+('Inside the Mekong River Conservation Efforts',
+ 'Conservation groups are working to protect the Mekong River ecosystem...',
+ 3),
+('Government Unveils Economic Recovery Plan',
+ 'In response to the post-pandemic slowdown, the Cambodian government has launched a multi-phase economic recovery plan...',
+ 4),
+('The Future of Journalism in the Age of AI',
+ 'AI tools are increasingly used in journalism for content generation, data analysis, and audience engagement...',
+ 2),
+('Traditional Crafts See Revival Through E-Commerce',
+ 'Khmer silk weaving, pottery, and wood carving are experiencing a revival thanks to online platforms...',
+ 5);
+
+-- Insert category_article 
+INSERT INTO category_article (articleId, categoryId) VALUES
+(1, 6), (1, 11),          
+(2, 1), (2, 3), (2, 5),  
+(3, 2), (3, 3),        
+(4, 10), (4, 5),        
+(5, 1), (5, 7), (5, 8), 
+(6, 1), (6, 3),           
+(7, 11), (7, 6),          
+(8, 5), (8, 1),           
+(9, 1), (9, 4),          
+(10, 12), (10, 5);   
+
+
+SELECT DISTINCT
+  a.id,
+  a.title,
+  a.content,
+  j.jur_name,
+  (
+    SELECT GROUP_CONCAT(c.cat_name SEPARATOR ', ')
+    FROM category_article ca
+    JOIN category c ON ca.categoryId = c.categoryId
+    WHERE ca.articleId = a.id
+  ) AS categories
+FROM articles AS a
+INNER JOIN journalist AS j ON a.journalistId = j.journalistId
+INNER JOIN category_article ca2 ON a.id = ca2.articleId
+WHERE ca2.categoryId IN (8, 1);
