@@ -10,7 +10,13 @@ export const getArticles = async () => {
 
 export const getArticleById = async (id) => {
   const response = await axios.get(`${API_BASE_URL}/articles/${id}`);
-  console.log(response.data)
+  return response.data;
+};
+
+export const getArticleByJournalistId = async (id) => {
+  const response = await axios.get(
+    `${API_BASE_URL}/journalists/${id}/articles`
+  );
   return response.data;
 };
 
@@ -20,7 +26,10 @@ export const createArticle = async (article) => {
 };
 
 export const updateArticle = async (id, updatedData) => {
-  const response = await axios.put(`${API_BASE_URL}/articles/${id}`, updatedData);
+  const response = await axios.put(
+    `${API_BASE_URL}/articles/${id}`,
+    updatedData
+  );
   return response.data;
 };
 
@@ -29,6 +38,20 @@ export const removeArticle = async (id) => {
   return response.data;
 };
 
+export const getCategories = async () => {
+  const response = await axios.get(`${API_BASE_URL}/categories`);
+  return response.data;
+};
+
+export const getArticleByCategory = async (categoryIds) => {
+  const ids = categoryIds.length > 0 ? categoryIds.join(",") : "";
+  const url = ids
+    ? `${API_BASE_URL}/categories/articles?categoryId=${ids}`
+    : `${API_BASE_URL}/categories/articles`;
+
+  const response = await axios.get(url);
+  return response.data;
+};
 
 // OLD VERSION - MOCK
 

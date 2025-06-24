@@ -27,7 +27,13 @@ export default function ArticleForm({ isEdit }) {
     setError("");
     try {
       const article = await getArticleById(id);
-      setFormData(article);
+      console.log(article)
+      setFormData({
+        title: article.title,
+        content: article.content,
+        journalist: article.journalistId,
+        category: article.categoryIds,
+      });
     } catch (err) {
       setError("Failed to load article. Please try again.");
     } finally {

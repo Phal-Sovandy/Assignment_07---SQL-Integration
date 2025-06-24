@@ -1,6 +1,8 @@
 import express, { json } from "express";
 import cors from "cors";
 import articleRouter from "./routes/articleRoutes.js";
+import journalistRoutes from "./routes/journalistRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
 
 const app = express();
 
@@ -12,6 +14,9 @@ app.use(cors());
 app.use(json());
 
 app.use("/api/articles", articleRouter);
+app.use("/api/journalists", journalistRoutes);
+app.use("/api/categories", categoryRoutes);
+
 
 const PORT = 4000;
 app.listen(PORT, () => {

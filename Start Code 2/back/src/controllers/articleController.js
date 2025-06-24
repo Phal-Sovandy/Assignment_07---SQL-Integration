@@ -18,7 +18,23 @@ export async function getArticleById(req, res) {
   try {
     const article = await articleRepository.getArticleById(req.params.id);
     if (!article) {
-      return res.status(404).json({ message: "Article not found" });
+      return res.status(200).json({ message: "Article not found" });
+    }
+    res.json(article);
+  } catch (error) {
+    console.error("Error fetching article:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
+// GET /api/journalists/:id/articles
+export async function getArticleByJournalistId(req, res) {
+  try {
+    const article = await articleRepository.getArticleByJournalistId(
+      req.params.id
+    );
+    if (!article) {
+      return res.status(200).json({ message: "Article not found" });
     }
     res.json(article);
   } catch (error) {
@@ -46,7 +62,7 @@ export async function updateArticle(req, res) {
       req.body
     );
     if (!updatedArticle) {
-      return res.status(404).json({ message: "Article not found" });
+      return res.status(200).json({ message: "Article not found" });
     }
     res.json(updatedArticle);
   } catch (error) {
@@ -62,6 +78,43 @@ export async function deleteArticle(req, res) {
     res.status(204).send();
   } catch (error) {
     console.error("Error deleting article:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
+// GET /api/categories
+export async function getCategories(req, res) {
+  try {
+    const categories = await articleRepository.getCategories();
+    res.status(200).json(categories);
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
+// GET /api/categories/articles?categoryId=1,3,5
+export async function getArticlesByCategory(req, res) {
+  const categoryIdsParam = req.query.categoryId;
+
+  const categoryIds = categoryIdsParam
+    ? categoryIdsParam.split(",").map((id) => Number(id))
+    : [];
+
+  try {
+    const articles = await articleRepository.getArticlesCategory(categoryIds);
+
+    if (!articles.length) {
+      return res
+        .status(200)
+        .json({ message: "No articles found for these categories" });
+    }
+    res.status(200).json(articles);
+  } catch (error) {
+    console.error(
+      `Error fetching articles for categories ${categoryIdsParam}:`,
+      error
+    );
     res.status(500).json({ message: "Server error" });
   }
 }

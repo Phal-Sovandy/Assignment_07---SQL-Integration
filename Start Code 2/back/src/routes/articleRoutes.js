@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAllArticles, getArticleById, createArticle, updateArticle, deleteArticle } from "../controllers/articleController.js";
+import { getAllArticles, getArticleById, createArticle, updateArticle, deleteArticle, getCategories, getArticlesByCategory } from "../controllers/articleController.js";
 
 const articleRouter = Router();
 articleRouter.get("/", getAllArticles);
